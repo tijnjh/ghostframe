@@ -1,0 +1,32 @@
+appId: dev.ghostframe.app
+productName: Ghostframe
+artifactName: ${productName}-${version}-${os}-${arch}.${ext}
+directories:
+  output: dist
+  buildResources: build
+files:
+  - out/**
+  - package.json
+publish: null
+
+mac:
+  target:
+    - target: dmg
+      arch: [arm64]
+  category: public.app-category.developer-tools
+  # No Apple Developer certificate: ad-hoc sign so Apple Silicon will run it.
+  identity: "-"
+  hardenedRuntime: false
+
+win:
+  target:
+    - target: nsis
+      arch: [x64]
+
+linux:
+  target:
+    - target: AppImage
+      arch: [x64]
+  category: Development
+  syncDesktopName: true
+  synopsis: Compare a live website against its Figma design

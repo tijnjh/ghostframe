@@ -1,0 +1,29 @@
+{
+  "name": "ghostframe",
+  "productName": "Ghostframe",
+  "desktopName": "ghostframe.desktop",
+  "version": "0.1.0",
+  "description": "Compare a live website against its Figma design: side by side, overlay, or swipe.",
+  "license": "MIT",
+  "private": true,
+  "main": "out/main/index.js",
+  "scripts": {
+    "dev": "electron-vite dev",
+    "build": "electron-vite build",
+    "start": "electron-vite preview",
+    "typecheck": "tsc --noEmit",
+    "dist": "electron-vite build && electron-builder"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.11",
+    "electron": "^45.5.0",
+    "electron-builder": "^26.18.0",
+    "electron-vite": "^6.0.0",
+    "typescript": "^7.0.2",
+    "vite": "^8.4.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tijnjh/ghostframe.git"
+  }
+}

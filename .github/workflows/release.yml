@@ -1,0 +1,105 @@
+name: Release
+
+# Every push to main builds the app for Linux, macOS and Windows and publishes a GitHub release.
+# Versioning is automatic: the patch number of the latest tag is bumped. To start a new minor or
+# major line, raise "version" in package.json; the next release then uses that version.
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - '**.md'
+      - 'LICENSE'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  version:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.next.outputs.version }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - id: next
+        shell: bash
+        run: |
+          pkg=$(node -p "require('./package.json').version")
+          latest=$(git tag --list 'v*' --sort=-v:refname | head -n1)
+          latest=${latest#v}
+          if [ -z "$latest" ]; then
+            next=$pkg
+          elif [ "$(printf '%s\n%s\n' "$latest" "$pkg" | sort -V | tail -n1)" = "$pkg" ] && [ "$pkg" != "$latest" ]; then
+            next=$pkg # package.json was bumped past the latest release
+          else
+            IFS=. read -r major minor patch <<< "$latest"
+            next="$major.$minor.$((patch + 1))"
+          fi
+          echo "Next version: $next"
+          echo "version=$next" >> "$GITHUB_OUTPUT"
+
+  build:
+    needs: version
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          - os: ubuntu-latest
+            platform: --linux
+          - os: macos-latest # Apple Silicon runner
+            platform: --mac
+          - os: windows-latest
+            platform: --win
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Set version
+        shell: bash
+        run: npm version "${{ needs.version.outputs.version }}" --no-git-tag-version --allow-same-version
+      - run: npm run typecheck
+      - run: npm run build
+      - name: Package
+        shell: bash
+        run: npx electron-builder ${{ matrix.platform }} --publish never
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: false
+      - uses: actions/upload-artifact@v7
+        with:
+          name: dist-${{ matrix.os }}
+          path: |
+            dist/*.AppImage
+            dist/*.dmg
+            dist/*.exe
+          if-no-files-found: error
+
+  release:
+    needs: [version, build]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          pattern: dist-*
+          merge-multiple: true
+          path: dist
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ needs.version.outputs.version }}
+        run: |
+          gh release create "v$VERSION" dist/* \
+            --repo "$GITHUB_REPOSITORY" \
+            --target "$GITHUB_SHA" \
+            --title "Ghostframe v$VERSION" \
+            --generate-notes

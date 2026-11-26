@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' https: data: blob:; frame-src http: https:; connect-src 'self' ws://localhost:*">
+  <title>Ghostframe</title>
+</head>
+<body>
+  <header>
+    <div class="row">
+      <label>Site <input type="text" id="site" placeholder="http://localhost:3000/…" spellcheck="false"></label>
+      <button id="reloadSite" title="Reload site (R)" aria-label="Reload site">↻</button>
+      <label>Figma <input type="text" id="figma" placeholder="https://www.figma.com/design/…?node-id=…" spellcheck="false"></label>
+      <label title="Figma → Settings → Security → Personal access tokens (scope: file content, read). Stored encrypted on this machine.">
+        Token <input type="password" id="token" class="token" placeholder="figd_… (optional)">
+      </label>
+      <button id="forgetToken" class="hidden" title="Remove the saved Figma token">Forget</button>
+      <button class="primary" id="load">Load</button>
+      <span class="sep"></span>
+      <button id="pickImg" title="Or drop / paste a PNG export of the frame">Use image…</button>
+      <button id="clearImg" class="hidden">Clear image</button>
+      <input type="file" id="file" accept="image/*" hidden>
+      <span class="hint" id="status"></span>
+    </div>
+    <div class="row">
+      <div class="seg" id="modeSeg" title="Keys 1 / 2 / 3">
+        <button data-mode="side">Side by side</button>
+        <button data-mode="overlay">Overlay</button>
+        <button data-mode="swipe">Swipe</button>
+      </div>
+      <div class="seg" id="deviceSeg">
+        <button data-w="390" data-h="844">Mobile</button>
+        <button data-w="768" data-h="1024">Tablet</button>
+        <button data-w="1440" data-h="900">Desktop</button>
+      </div>
+      <label>Width <input type="number" id="width" list="widths" min="200" step="1"></label>
+      <datalist id="widths">
+        <option value="360"><option value="375"><option value="390"><option value="430">
+        <option value="768"><option value="1024"><option value="1280"><option value="1440"><option value="1920">
+      </datalist>
+      <label>Height <input type="number" id="height" min="200" step="1"></label>
+      <label id="fullWrap" class="hidden"><input type="checkbox" id="full"> Full page</label>
+      <label>Zoom
+        <select id="zoom">
+          <option value="fit">Fit</option>
+          <option value="1">100%</option>
+          <option value="0.75">75%</option>
+          <option value="0.5">50%</option>
+        </select>
+      </label>
+      <span class="sep ov"></span>
+      <label class="ov only-overlay">Opacity <input type="range" id="opacity" min="0" max="100"> <span id="opacityVal" class="num"></span></label>
+      <label class="ov only-swipe">Swipe <input type="range" id="swipe" min="0" max="100"></label>
+      <label class="ov">Blend
+        <select id="blend">
+          <option value="normal">Normal</option>
+          <option value="difference">Difference</option>
+        </select>
+      </label>
+      <label class="ov" title="Arrow keys nudge (Shift = 10px)">Offset X <input type="number" id="dx" step="1"></label>
+      <label class="ov">Y <input type="number" id="dy" step="1"></label>
+      <label class="ov">Interact
+        <select id="interact">
+          <option value="site">Site</option>
+          <option value="design">Design</option>
+        </select>
+      </label>
+    </div>
+  </header>
+
+  <main id="viewport">
+    <div id="sizer">
+      <div id="stage">
+        <div class="tag" id="tagSite"></div>
+        <div class="tag" id="tagDesign"></div>
+        <iframe class="layer" id="siteFrame" title="Live site"
+          sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-modals allow-downloads"></iframe>
+        <iframe class="layer" id="figmaFrame" title="Figma" allowfullscreen></iframe>
+        <img class="layer hidden" id="designImg" alt="Design">
+        <div id="swipeLine" class="hidden"></div>
+      </div>
+    </div>
+    <div id="empty">
+      <p>Enter a site URL and a Figma link, then hit <strong>Load</strong>.</p>
+      <p class="hint">Add a Figma token for a pixel-exact frame render, or drop / paste a PNG export.</p>
+    </div>
+  </main>
+  <div id="drop" class="hidden">Drop design image</div>
+
+  <script type="module" src="./src/main.ts"></script>
+</body>
+</html>
