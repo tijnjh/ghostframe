@@ -4,6 +4,7 @@ import type { IpcMainInvokeEvent } from 'electron'
 import type { RenderFrameResult } from '../shared/api'
 import { parseFigmaNodeUrl } from '../shared/figma-url'
 import { renderFrame, RENDER_PIXEL_RATIO } from './figma'
+import { attachMagnifier } from './magnifier'
 import { clearFigmaToken, getFigmaToken, setFigmaToken } from './token-store'
 
 /**
@@ -66,6 +67,11 @@ function registerIpc(): void {
   })
 }
 
+function loadPage(win: BrowserWindow, page: string): void {
+  if (process.env.ELECTRON_RENDERER_URL) void win.loadURL(`${process.env.ELECTRON_RENDERER_URL}/${page}`)
+  else void win.loadFile(join(__dirname, '../renderer', page))
+}
+
 function createWindow(): void {
   const win = new BrowserWindow({
     width: 1600,
@@ -93,10 +99,13 @@ function createWindow(): void {
     return { action: 'deny' }
   })
   // Never let the app window itself be navigated away (e.g. by a dropped file or a framed site).
-  win.webContents.on('will-navigate', event => event.preventDefault())
+  // Reloads of the app page itself (dev-server hot reload) are fine.
+  win.webContents.on('will-navigate', (event, url) => {
+    if (url !== win.webContents.getURL()) event.preventDefault()
+  })
 
-  if (process.env.ELECTRON_RENDERER_URL) void win.loadURL(process.env.ELECTRON_RENDERER_URL)
-  else void win.loadFile(join(__dirname, '../renderer/index.html'))
+  loadPage(win, 'index.html')
+  attachMagnifier(win, loadPage)
 }
 
 app.whenReady().then(() => {

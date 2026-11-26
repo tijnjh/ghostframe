@@ -1,5 +1,6 @@
 import './styles.css'
 import { figmaEmbedUrl, parseFigmaNodeUrl } from '../../shared/figma-url'
+import { setupMagnifier } from './magnifier'
 import { loadSettings, saveSettings } from './settings'
 import type { Mode, Settings } from './settings'
 
@@ -377,6 +378,16 @@ function renderStatus(useImg: boolean, siteW: number, designW: number): void {
   el.textContent = text
   el.classList.toggle('warn', warn)
 }
+
+// ---------------------------------------------------------------- magnifier
+
+setupMagnifier($('magnifier'), {
+  get: () => settings.lensZoom,
+  set: (zoom) => {
+    settings.lensZoom = zoom
+    persist()
+  },
+})
 
 // ---------------------------------------------------------------- start
 

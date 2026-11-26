@@ -34,6 +34,7 @@ The builds aren't signed with a paid certificate, so on first launch:
 - **Exact viewport width.** The site's scrollbar is hidden (scrolling still works), so the page lays out at exactly the width you choose.
 - **Device presets** (Mobile 390, Tablet 768, Desktop 1440) or any custom width. **Full page** sizes the site to the design's height so both scroll together.
 - **Alignment helpers:** offset X/Y with arrow-key nudging, and a choice of which layer receives clicks.
+- **Magnifier.** A round magnifier waits in the bottom-right corner. Press and hold it to pick it up (the glass floats just above your cursor), drag it over anything (site, design or overlay), and scroll to zoom from 1.5× to 24×. From 8× up it shows a pixel grid and outlines the pixel under the centre. Let go and it goes back to its spot.
 
 ### Figma token (recommended)
 
@@ -50,6 +51,7 @@ When a frame loads, the site width is set to match it.
 | `1` `2` `3` | Side by side, Overlay, Swipe |
 | Arrow keys | Nudge the design layer by 1px (hold Shift for 10px) |
 | `R` | Reload the site |
+| Hold the magnifier + scroll | Zoom the magnifier |
 | `Enter` in a URL field | Load |
 
 ## Development

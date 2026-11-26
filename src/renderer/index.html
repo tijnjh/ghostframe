@@ -87,6 +87,19 @@
   </main>
   <div id="drop" class="hidden">Drop design image</div>
 
+  <button id="magnifier" title="Magnifier: hold and drag, scroll to zoom" aria-label="Magnifier">
+    <svg viewBox="0 0 64 64" aria-hidden="true">
+      <defs>
+        <linearGradient id="mgRim" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#f4f6fa"/><stop offset=".5" stop-color="#8a919d"/><stop offset="1" stop-color="#d9dde4"/>
+        </linearGradient>
+      </defs>
+      <circle cx="32" cy="32" r="25" fill="#7aa9ff" fill-opacity=".22" stroke="url(#mgRim)" stroke-width="6"/>
+      <path d="M19 26a14 14 0 0 1 11-10" fill="none" stroke="#fff" stroke-opacity=".6" stroke-width="3" stroke-linecap="round"/>
+      <path d="M27 32h10M32 27v10" stroke="#e8e8ea" stroke-opacity=".7" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+  </button>
+
   <script type="module" src="./src/main.ts"></script>
 </body>
 </html>

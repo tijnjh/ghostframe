@@ -15,6 +15,7 @@ export interface Settings {
   dx: number
   dy: number
   interact: 'site' | 'design'
+  lensZoom: number
 }
 
 export const defaults: Settings = {
@@ -31,6 +32,7 @@ export const defaults: Settings = {
   dx: 0,
   dy: 0,
   interact: 'site',
+  lensZoom: 3,
 }
 
 const KEY = 'ghostframe:settings'

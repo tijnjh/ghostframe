@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' ws://localhost:*">
+  <title>Magnifier</title>
+</head>
+<body>
+  <div id="scene">
+    <div id="rim"></div>
+    <div id="glass">
+      <canvas id="view"></canvas>
+      <div id="shine"></div>
+      <div id="zoom"></div>
+    </div>
+  </div>
+  <script type="module" src="./src/lens.ts"></script>
+</body>
+</html>

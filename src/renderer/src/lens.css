@@ -1,0 +1,63 @@
+/* Geometry comes from src/shared/lens.ts via CSS variables set in lens.ts. */
+html, body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: transparent;
+  user-select: none;
+  font: 600 12px/1 system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+#scene {
+  position: absolute;
+  inset: 0;
+  filter: drop-shadow(0 10px 14px rgba(0, 0, 0, .45));
+}
+
+#rim {
+  position: absolute;
+  left: calc(var(--c) - var(--r) - 11px);
+  top: calc(var(--c) - var(--r) - 11px);
+  width: calc(2 * (var(--r) + 11px));
+  height: calc(2 * (var(--r) + 11px));
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, transparent calc(var(--r) - 1px), rgba(0, 0, 0, .55) var(--r), transparent calc(var(--r) + 2px)),
+    conic-gradient(from 210deg, #f4f6fa, #9aa1ad, #e3e7ee, #6d7480, #cfd4dc, #8a919d, #f4f6fa);
+}
+
+#glass {
+  position: absolute;
+  left: calc(var(--c) - var(--r));
+  top: calc(var(--c) - var(--r));
+  width: calc(2 * var(--r));
+  height: calc(2 * var(--r));
+  border-radius: 50%;
+  overflow: hidden;
+  background: #111113;
+}
+
+#view { display: block; width: 100%; height: 100%; }
+
+#shine {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(ellipse 60% 40% at 32% 22%, rgba(255, 255, 255, .28), transparent 70%),
+    radial-gradient(circle, transparent 72%, rgba(0, 0, 0, .25) 100%);
+  pointer-events: none;
+}
+
+#zoom {
+  position: absolute;
+  left: 50%;
+  bottom: 14px;
+  transform: translateX(-50%);
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(17, 17, 19, .75);
+  color: #e8e8ea;
+  font-variant-numeric: tabular-nums;
+}
